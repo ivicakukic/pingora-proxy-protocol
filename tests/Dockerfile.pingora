@@ -1,0 +1,24 @@
+FROM ubuntu:24.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends wget curl openssl ca-certificates
+
+WORKDIR /var/opt/pingora
+RUN mkdir -p tests
+
+COPY ./tests/keys ./tests/keys
+COPY ./tests/pingora_conf.yml ./tests/pingora_conf.yml
+
+COPY ./target/release/proxy ./proxy
+RUN ls -l /var/opt/pingora && chmod +x /var/opt/pingora/proxy
+
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 8082
+EXPOSE 8443
+EXPOSE 8444
+EXPOSE 8445
+EXPOSE 9001
+
+ENV RUST_LOG=DEBUG
+
+CMD ["./proxy", "-c", "./tests/pingora_conf.yml"]

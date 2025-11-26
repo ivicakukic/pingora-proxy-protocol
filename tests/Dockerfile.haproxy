@@ -1,0 +1,13 @@
+FROM haproxy:latest
+COPY ./tests/haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends curl
+
+USER haproxy
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 8082
+EXPOSE 8443
+EXPOSE 8444
+EXPOSE 8445

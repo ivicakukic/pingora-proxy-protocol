@@ -1,0 +1,44 @@
+[package]
+name = "pingora-proxy-protocol"
+version = "0.1.0"
+edition = "2024"
+default-run = "proxy"
+
+[dependencies]
+log         = "0.4"
+env_logger  = "0.9"
+bytes       = "1.9"
+http        = "1.2"
+tokio       = "1.28"
+async-trait = "0.1"
+clap = { version = "4.2", features = ["derive"] }
+proxy-header = { git = "https://github.com/ivicakukic/proxy-header.git", branch = "header-parts" }
+
+# Base Pingora dependencies
+pingora      = { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol" }
+pingora-core = { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol", package = "pingora-core", features = ["proxy_protocol"] }
+pingora-proxy= { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol", package = "pingora-proxy" }
+pingora-http = { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol", package = "pingora-http" }
+pingora-error= { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol", package = "pingora-error" }
+pingora-timeout = { git = "https://github.com/ivicakukic/pingora.git", branch = "proxy-protocol", package = "pingora-timeout" }
+
+
+# --- Feature Definitions ---
+[features]
+default = []
+openssl = ["pingora-core/openssl"]
+boringssl = ["pingora-core/boringssl"]
+rustls = ["pingora-core/rustls"]
+s2n = ["pingora-core/s2n"]
+
+
+# --- Binary Definitions ---
+
+[[bin]]
+name = "proxy"
+path = "src/proxy.rs"
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
+required-features = ["openssl"]
